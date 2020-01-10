@@ -18,6 +18,14 @@
 #' @export
 find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
+  # check arguments ---
+  # if the sum of characters that is different than ACGTNacgtn is more than 0, then some wrong nucleotides
+  if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0){
+    stop("Error: unrecognized nucleotides")
+  }
+
+  if ( l == 0 || !is.numeric(l)) stop("Error: double check your numeric argument!")
+
   # arguments to uppercase
   argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
   list2env(argum, envir =  environment())
@@ -102,7 +110,13 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
 #' @rdname find_proto
 find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
-  browser()
+  # if the sum of characters that is different than ACGTNacgtn is more than 0, then some wrong nucleotides
+  if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0){
+    stop("Error: unrecognized nucleotides")
+  }
+
+  if ( l == 0 || !is.numeric(l)) stop("Error: double check your numeric argument!")
+
   # arguments to uppercase
   argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
   list2env(argum, envir =  environment())
@@ -188,9 +202,15 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
 #' }
 #' @export
 find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, l = 20, PAM = "NGG") {
+
+  # check arguments ---
+  if (start == end || end - start <= l || !is.numeric(c(start, end))) stop("Error: double check your numeric parameters!")
+
   message(">>> Importing Data...\n")
   gen <- Biostrings::readDNAStringSet(file_fasta, format = "fasta")
   message(">>> Data Imported!\n")
+
+
 
   # example to match: "NC_000001.11 Homo sapiens chromosome 1, GRCh38.p13 Primary Assembly"
   # pattern = "chromosome 1,.*Primary Assembly$"
