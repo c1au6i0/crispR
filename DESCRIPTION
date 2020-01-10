@@ -1,0 +1,19 @@
+Package: crispR
+Type: Package
+Title: find protospacers
+Version: 0.0.0.9000
+Author: claudio_zanettini
+Maintainer: claudio_zanettini <claudio.zanettini@gmail.com>
+Description: Find protospacers in DNA sequences for CRISPR/Cas gene editing.
+    TakeHome test for bioinformatic job.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 2.10)
+Imports: 
+    stringr,
+    vroom,
+    Biostrings,
+    purrr
+RoxygenNote: 7.0.2
