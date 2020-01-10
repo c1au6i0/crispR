@@ -102,13 +102,14 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
 #' @rdname find_proto
 find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
+  browser()
   # arguments to uppercase
   argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
   list2env(argum, envir =  environment())
 
   # PAMs for forward and reverse strand ----
   # substitute N with [ACGT]
-  # reverse complement of PAM
+  # complement of PAM
   PAM_r <- as.character(Biostrings::complement(Biostrings::DNAString(PAM)))
   PAMs <- lapply(list(PAM, PAM_r), function(x) gsub("N", "[ACGT]", x))
   names(PAMs) <- c("forward", "reverse")
@@ -117,19 +118,24 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
   # protospacer pattern forward strand
   # example: ([ACGT])(?=[ACGT]{19}[ACGT]GG)
   # looks for START of protospacer: a character that is followed by l -  1 characters and PAM.
-  pro_pattern <-     paste0("([ACGT])(?=[ACGT]{", l - 1, "}", PAMs$forward, ")", collapse = "")
+  pro_patterns <- lapply(PAMs, function(x){
+    paste0("([ACGT])(?=[ACGT]{", l - 1, "}", x, ")", collapse = "")
+  }
+  )
 
-  # extract the protospacers ----
-  # Note that we could actually create a function to apply to both strands, and thus
-  # eliminate some duplication
+  names(pro_patterns) <- c("forward", "reverse")
 
   # locate the start of the protospacers ---
+  # we need the complementary of the reverse strand
   d_seq_rev <- as.character(Biostrings::complement(Biostrings::DNAString(d_seq)))
 
-  pro_start <- purrr::map2_dfr(list(d_seq, d_seq_rev), list("+", "-"), function(x, y){
-                      pro_start <- as.data.frame(stringr::str_locate_all(x, pro_pattern))
-                      pro_start[,"strand"] <- y
-                      pro_start
+
+
+  pro_start <- purrr::pmap_dfr(list(list(d_seq, d_seq_rev), pro_patterns, list("+", "-")), function(dna, pat, strand){
+    pro_start <- as.data.frame(stringr::str_locate_all(dna, pat))
+    pro_start[, "strand"] <- strand
+    pro_start
+
   })
 
   # extract protospacers ---
@@ -142,8 +148,8 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
     }
     start_p <- x
     end_p <- x + l - 1
-    protospacer <- stringr::str_sub(sequence, start = start_p, end = end_p)
-    PAM <- stringr::str_sub(d_seq, start = end_p + 1, end = end_p + 3)
+    protospacer <- stringr::str_sub(sequen, start = start_p, end = end_p)
+    PAM <- stringr::str_sub(sequen, start = end_p + 1, end = end_p + 3)
     strand <- y
 
     return(list(
@@ -158,9 +164,6 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
   protospacers
 
 }
-
-
-
 
 #' find_FASTA
 #'
@@ -183,9 +186,7 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
 #'     \item  Strand (+ or -).
 #' }
 #' @export
-
 find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, l = 20, PAM = "NGG") {
-  browser()
   message(">>> Importing Data...\n")
   gen <- Biostrings::readDNAStringSet(file_fasta, format = "fasta")
   message(">>> Data Imported!\n")
