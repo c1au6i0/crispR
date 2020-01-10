@@ -5,13 +5,14 @@
 #' @param d_seq input DNA sequence for genomic region from which to identify protospacer sequences (in capital letters).
 #' @param l protospacer length.
 #' @param PAM sequence to match.
-#' @return a dataframe with columns:
+#' @return a dataframe with columns.
 #' \enumerate{
 #'     \item  start.
 #'     \item  end.
 #'     \item  protospacer sequence.
 #'     \item  PAM sequence (e.g. CGG as the sequence that matched the PAM sequence NGG).
 #'     \item  Strand (+ or -).
+#'     }
 #' @details xxxxxx
 #' @export
 
@@ -19,7 +20,7 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
 
   # arguments to uppercase
   argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
-  list2env(argum, env = environment())
+  list2env(argum, envir =  environment())
 
   # PAMs for forward and reverse strand ----
   # substitute N with [ACGT]
@@ -90,8 +91,7 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
   })
 
   # bind them together
-  rbind()
-
+  rbind(protospacers_fw, protospacers_neg)
 }
 
 
@@ -101,10 +101,11 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
 #' coordinates are \strong{1-indexed} and \strong{fully closed}.
 #'
 #' @param file_fasta  path to a file FASTA (either compressed or not).
+#' @param chr chromosome.
 #' @param start start of the DNA sequence to scan for protospacers.
 #' @param end  end of the DNA sequence to scan for protospacers.
 #' @param l protospacer length.
-#' @param p PAM sequence to match.
+#' @param PAM PAM sequence to match.
 #' @return a dataframe with columns:
 #' \enumerate{
 #'     \item  chr.
@@ -116,11 +117,10 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
 #' }
 #' @export
 
-find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, l = 20, p = "NGG") {
+find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, l = 20, PAM = "NGG") {
   browser()
-
   message(">>> Importing Data...\n")
-  gen <- readDNAStringSet(svDialogs::dlg_open()$res, format = "fasta")
+  gen <- Biostrings::readDNAStringSet(file_fasta, format = "fasta")
   message(">>> Data Imported!\n")
 
   # example to match: "NC_000001.11 Homo sapiens chromosome 1, GRCh38.p13 Primary Assembly"
@@ -129,13 +129,11 @@ find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, 
 
   # subset by chromosome and coordinates
   gen_chr <- gen[grepl(chr_pattern, gen@ranges@NAMES)]
-  gen_chr <- subseq(gen_chr, start = start, end = end)
+  gen_chr_sub <- as.character(XVector::subseq(gen_chr, start = start, end = end))
 
+  protospacers <- find_proto(d_seq = gen_chr_sub, l = l, PAM = PAM)
 
+  solution <- cbind(rep(chr, nrow(protospacers)), protospacers)
 
-
-  proto_pattern <- paste0(".{", l, "}", "(?=", p, ")", collapse = "")
-
-  vmatchPattern("CGG", gen_chr)
-  names(gen_chr)
+  solution
 }

@@ -15,5 +15,6 @@ Imports:
     stringr,
     vroom,
     Biostrings,
-    purrr
+    purrr,
+    XVector
 RoxygenNote: 7.0.2

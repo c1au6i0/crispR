@@ -10,13 +10,11 @@ find_FASTA(
   start = 117465784,
   end = 117466784,
   l = 20,
-  p = "NGG"
+  PAM = "NGG"
 )
 }
 \arguments{
 \item{file_fasta}{path to a file FASTA (either compressed or not).}
-
-\item{chr}{chromosome number.}
 
 \item{start}{start of the DNA sequence to scan for protospacers.}
 
@@ -24,7 +22,7 @@ find_FASTA(
 
 \item{l}{protospacer length.}
 
-\item{p}{PAM sequence to match.}
+\item{PAM}{PAM sequence to match.}
 }
 \value{
 a dataframe with columns:

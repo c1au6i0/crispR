@@ -4,18 +4,21 @@
 \alias{find_proto}
 \title{find_proto}
 \usage{
-find_proto(s, l, p)
+find_proto(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG")
 }
 \arguments{
-\item{s}{input DNA sequence for genomic region from which to identify protospacer sequences (in capital letters).}
+\item{d_seq}{input DNA sequence for genomic region from which to identify protospacer sequences (in capital letters).}
 
 \item{l}{protospacer length.}
 
-\item{p}{PAM sequence to match (in capital letters).}
+\item{PAM}{sequence to match.}
 }
 \value{
-a list of protospacers.
+
 }
 \description{
 Function to identify all candidate guide (protospacer) sequences from a given genomic region.
+}
+\details{
+xxxxxx
 }
