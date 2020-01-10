@@ -129,8 +129,6 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
   # we need the complementary of the reverse strand
   d_seq_rev <- as.character(Biostrings::complement(Biostrings::DNAString(d_seq)))
 
-
-
   pro_start <- purrr::pmap_dfr(list(list(d_seq, d_seq_rev), pro_patterns, list("+", "-")), function(dna, pat, strand){
     pro_start <- as.data.frame(stringr::str_locate_all(dna, pat))
     pro_start[, "strand"] <- strand
@@ -162,6 +160,9 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
   })
 
   protospacers
+
+  # guess what?! what did you expect to find? the hits on reverse are the complementary of the hits forward.
+  # this can't be right
 
 }
 
