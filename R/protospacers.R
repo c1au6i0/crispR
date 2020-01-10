@@ -2,6 +2,7 @@
 #'
 #' Function to identify all candidate guide (protospacer) sequences from a given genomic region.
 
+#' @rdname find_proto
 #' @param d_seq input DNA sequence for genomic region from which to identify protospacer sequences (in capital letters).
 #' @param l protospacer length.
 #' @param PAM sequence to match.
@@ -13,9 +14,8 @@
 #'     \item  PAM sequence (e.g. CGG as the sequence that matched the PAM sequence NGG).
 #'     \item  Strand (+ or -).
 #'     }
-#' @details xxxxxx
+#' @details For reverse strand reverseComplement PAM, comolement d_seq, match after PAM
 #' @export
-
 find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
   # arguments to uppercase
@@ -93,6 +93,73 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
   # bind them together
   rbind(protospacers_fw, protospacers_neg)
 }
+
+#' find_proto2
+#'
+#' Function to identify all candidate guide (protospacer) sequences from a given genomic region.
+#' @details For reverse strand: complement PAM, complement d_seq, match before PAM
+#' @export
+#' @rdname find_proto
+find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
+
+  # arguments to uppercase
+  argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
+  list2env(argum, envir =  environment())
+
+  # PAMs for forward and reverse strand ----
+  # substitute N with [ACGT]
+  # reverse complement of PAM
+  PAM_r <- as.character(Biostrings::complement(Biostrings::DNAString(PAM)))
+  PAMs <- lapply(list(PAM, PAM_r), function(x) gsub("N", "[ACGT]", x))
+  names(PAMs) <- c("forward", "reverse")
+
+  # dynamically create the pattern to match ----
+  # protospacer pattern forward strand
+  # example: ([ACGT])(?=[ACGT]{19}[ACGT]GG)
+  # looks for START of protospacer: a character that is followed by l -  1 characters and PAM.
+  pro_pattern <-     paste0("([ACGT])(?=[ACGT]{", l - 1, "}", PAMs$forward, ")", collapse = "")
+
+  # extract the protospacers ----
+  # Note that we could actually create a function to apply to both strands, and thus
+  # eliminate some duplication
+
+  # locate the start of the protospacers ---
+  d_seq_rev <- as.character(Biostrings::complement(Biostrings::DNAString(d_seq)))
+
+  pro_start <- purrr::map2_dfr(list(d_seq, d_seq_rev), list("+", "-"), function(x, y){
+                      pro_start <- as.data.frame(stringr::str_locate_all(x, pro_pattern))
+                      pro_start[,"strand"] <- y
+                      pro_start
+  })
+
+  # extract protospacers ---
+  # note: needs d_seq and d_seq_rev!
+  protospacers <- purrr::map2_dfr(pro_start$start, pro_start$strand, function(x, y) {
+    if(y == "+") {
+      sequen <- d_seq
+    } else {
+      sequen <- d_seq_rev
+    }
+    start_p <- x
+    end_p <- x + l - 1
+    protospacer <- stringr::str_sub(sequence, start = start_p, end = end_p)
+    PAM <- stringr::str_sub(d_seq, start = end_p + 1, end = end_p + 3)
+    strand <- y
+
+    return(list(
+      start_p = start_p,
+      end_p = end_p,
+      protospacer = protospacer,
+      PAM = PAM,
+      strand = strand
+    ))
+  })
+
+  protospacers
+
+}
+
+
 
 
 #' find_FASTA
