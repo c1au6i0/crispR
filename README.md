@@ -19,9 +19,8 @@ devtools::install_github("c1au6i0/crispR")
 
 ### a) the code for the function
 
-You can access the code of the function `find_proto` on this file on my
-github account
-([link](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R)).
+You can access the code of the function `find_proto`
+([here](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R)).
 
 ### b) the code to call the function with the example variables (and others, if desired)
 
@@ -82,9 +81,8 @@ time Complexity: *O(n)*
 
 ### a) The code for the function
 
-You can access the code of the function `find_FASTA` on this file on my
-github account
-([link](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R)).
+You can access the code of the function `find_FASTA`
+([here](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R)).
 
 ### b) The source of the FASTA file used for the reference genome in the example problem
 
