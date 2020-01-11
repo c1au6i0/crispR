@@ -70,7 +70,7 @@ A tab-delimited file can be downloaded here ([link]("https://onedrive.live.com/e
 
 ### Dependencies
 
-All the dependencies are listed in the `Description` file in my github account [here](https://github.com/c1au6i0/crispR/blob/master/DESCRIPTION)
+All the dependencies are listed in the `Description` file in my github account [here](https://github.com/c1au6i0/crispR/blob/master/DESCRIPTION).
 
 
 

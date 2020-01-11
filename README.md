@@ -107,4 +107,4 @@ A tab-delimited file can be downloaded here
 
 All the dependencies are listed in the `Description` file in my github
 account
-[here](https://github.com/c1au6i0/crispR/blob/master/DESCRIPTION)
+[here](https://github.com/c1au6i0/crispR/blob/master/DESCRIPTION).
