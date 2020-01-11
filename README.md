@@ -100,17 +100,13 @@ closed.
 
 ### d) The list of candidate guide (protospacer) sequences in a tab-delimited file…
 
-A tab-delimited file can be downloaded
-here:
-
-<iframe src="https://onedrive.live.com/embed?cid=BCC43C613C51DA6D&amp;resid=BCC43C613C51DA6D%21150834&amp;authkey=AClxLR-5kdGg4mQ" width="98" height="120" frameborder="0" scrolling="no">
-
-</iframe>
+A tab-delimited file can be downloaded here
+([link](%22https://onedrive.live.com/embed?cid=BCC43C613C51DA6D&resid=BCC43C613C51DA6D%21150834&authkey=AClxLR-5kdGg4mQ%22)).
 
 …or visualized in the following interactive
 table:
 
-<iframe seamless src="/Users/heverz/Documents/crispR/protospacers.html" width="100%" height="600">
+<iframe src="https://onedrive.live.com/embed?cid=BCC43C613C51DA6D&amp;resid=BCC43C613C51DA6D%21150835&amp;authkey=AKrl5r8sFnn_J-w" width="98" height="120" frameborder="0" scrolling="no">
 
 </iframe>
 
