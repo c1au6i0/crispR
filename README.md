@@ -100,8 +100,8 @@ closed.
 
 ### d) The list of candidate guide (protospacer) sequences in a tab-delimited file…
 
-A tab-delimited file can be downloaded here
-([link](%22https://1drv.ms/t/s!Am3aUTxhPMS8iZoy1Pj5gxzL2XP9Qg%22)).
+A tab-delimited file can be downloaded
+[here](https://1drv.ms/t/s!Am3aUTxhPMS8iZoyhzb0kQcSU3ITOw?e=BL0aqe).
 
 ### Dependencies
 
