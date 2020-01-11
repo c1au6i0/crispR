@@ -66,7 +66,7 @@ A total of 54 protospacers were identified on strand (+). Please note the argume
 
 ### d)  The list of candidate guide (protospacer) sequences in a tab-delimited file...
 
-A tab-delimited file can be downloaded here ([link]("https://onedrive.live.com/embed?cid=BCC43C613C51DA6D&resid=BCC43C613C51DA6D%21150834&authkey=AClxLR-5kdGg4mQ")).
+A tab-delimited file can be downloaded here ([link]("https://1drv.ms/t/s!Am3aUTxhPMS8iZoy1Pj5gxzL2XP9Qg")).
 
 ### Dependencies
 
