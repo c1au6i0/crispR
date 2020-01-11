@@ -103,13 +103,6 @@ closed.
 A tab-delimited file can be downloaded here
 ([link](%22https://onedrive.live.com/embed?cid=BCC43C613C51DA6D&resid=BCC43C613C51DA6D%21150834&authkey=AClxLR-5kdGg4mQ%22)).
 
-…or visualized in the following interactive
-table:
-
-<iframe src="https://onedrive.live.com/embed?cid=BCC43C613C51DA6D&amp;resid=BCC43C613C51DA6D%21150835&amp;authkey=AKrl5r8sFnn_J-w" width="98" height="120" frameborder="0" scrolling="no">
-
-</iframe>
-
 ### Dependencies
 
 All the dependencies are listed in the `Description` file in my github
