@@ -18,8 +18,9 @@
 #' @export
 find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
+  browser()
   # check arguments ---
-  # if the sum of characters that is different than ACGTNacgtn is more than 0, then some wrong nucleotides
+  # if the sum of characters that is dif:)ferent than ACGTNacgtn is more than 0, then some wrong nucleotides
   if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0){
     stop("Error: unrecognized nucleotides")
   }
@@ -121,62 +122,43 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
   argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
   list2env(argum, envir =  environment())
 
-  # PAMs for forward and reverse strand ----
   # substitute N with [ACGT]
-  # complement of PAM
-  PAM_r <- as.character(Biostrings::complement(Biostrings::DNAString(PAM)))
-  PAMs <- lapply(list(PAM, PAM_r), function(x) gsub("N", "[ACGT]", x))
-  names(PAMs) <- c("forward", "reverse")
+  PAM <- gsub("N", "[ACGT]", PAM)
 
   # dynamically create the pattern to match ----
   # protospacer pattern forward strand
   # example: ([ACGT])(?=[ACGT]{19}[ACGT]GG)
   # looks for START of protospacer: a character that is followed by l -  1 characters and PAM.
-  pro_patterns <- lapply(PAMs, function(x){
-    paste0("([ACGT])(?=[ACGT]{", l - 1, "}", x, ")", collapse = "")
-  }
-  )
-
-  names(pro_patterns) <- c("forward", "reverse")
+  pro_pattern <- paste0("([ACGT])(?=[ACGT]{", l - 1, "}", PAM, ")", collapse = "")
 
   # locate the start of the protospacers ---
-  # we need the complementary of the reverse strand
-  d_seq_rev <- as.character(Biostrings::complement(Biostrings::DNAString(d_seq)))
-
-  pro_start <- purrr::pmap_dfr(list(list(d_seq, d_seq_rev), pro_patterns, list("+", "-")), function(dna, pat, strand){
-    pro_start <- as.data.frame(stringr::str_locate_all(dna, pat))
-    pro_start[, "strand"] <- strand
-    pro_start
-
-  })
+  pro_start <- as.data.frame(stringr::str_locate_all(d_seq, pro_pattern))
 
   # extract protospacers ---
-  # note: needs d_seq and d_seq_rev!
-  protospacers <- purrr::map2_dfr(pro_start$start, pro_start$strand, function(x, y) {
-    if(y == "+") {
-      sequen <- d_seq
-    } else {
-      sequen <- d_seq_rev
-    }
+  # note: needs d_seq
+  proto_frw <- purrr::map_dfr(pro_start$start, function(x) {
     start_p <- x
     end_p <- x + l - 1
-    protospacer <- stringr::str_sub(sequen, start = start_p, end = end_p)
-    PAM <- stringr::str_sub(sequen, start = end_p + 1, end = end_p + 3)
-    strand <- y
+    protospacer <- stringr::str_sub(d_seq , start = start_p, end = end_p)
+    PAM <- stringr::str_sub(d_seq , start = end_p + 1, end = end_p + 3)
 
     return(list(
       start_p = start_p,
       end_p = end_p,
       protospacer = protospacer,
-      PAM = PAM,
-      strand = strand
+      PAM = PAM
     ))
   })
 
-  protospacers
+  proto_frw[, "strand"] <-  "+"
 
-  # guess what?! what did you expect to find? the hits on reverse are the complementary of the hits forward.
-  # this can't be right
+  proto_rev <- proto_frw
+  proto_rev$strand <-  "-"
+  proto_rev$protospacer <- unlist(lapply(proto_frw$protospacer,
+                                         function(x) as.character(Biostrings::reverseComplement(Biostrings::DNAString(x)))))
+  protospacers <- rbind(proto_frw, proto_rev)
+
+  protospacers
 
 }
 
@@ -210,8 +192,6 @@ find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, 
   gen <- Biostrings::readDNAStringSet(file_fasta, format = "fasta")
   message(">>> Data Imported!\n")
 
-
-
   # example to match: "NC_000001.11 Homo sapiens chromosome 1, GRCh38.p13 Primary Assembly"
   # pattern = "chromosome 1,.*Primary Assembly$"
   chr_pattern <- paste0("chromosome ", chr, ",.*Primary Assembly$", collapse = "")
@@ -220,9 +200,7 @@ find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, 
   gen_chr <- gen[grepl(chr_pattern, gen@ranges@NAMES)]
   gen_chr_sub <- as.character(XVector::subseq(gen_chr, start = start, end = end))
 
-  protospacers <- find_proto(d_seq = gen_chr_sub, l = l, PAM = PAM)
-
-  solution <- cbind(rep(chr, nrow(protospacers)), protospacers)
+  protospacers <- find_proto2(d_seq = gen_chr_sub, l = l, PAM = PAM)
 
   solution
 }
