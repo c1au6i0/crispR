@@ -7,7 +7,7 @@ output: github_document
 <!-- badges: start -->
 <!-- badges: end -->
 
-I wrote the functions directly in a `R package`. This facilitates the installation of all the dependencies..
+I wrote the functions directly in a `R package`. This facilitates the installation of all the dependencies...
 
 ## Installation
 

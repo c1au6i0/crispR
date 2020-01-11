@@ -6,7 +6,7 @@
 <!-- badges: end -->
 
 I wrote the functions directly in a `R package`. This facilitates the
-installation of all the dependencies..
+installation of all the dependencies…
 
 ## Installation
 
