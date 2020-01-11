@@ -18,99 +18,6 @@
 #' @export
 find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
-  browser()
-  # check arguments ---
-  # if the sum of characters that is dif:)ferent than ACGTNacgtn is more than 0, then some wrong nucleotides
-  if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0){
-    stop("Error: unrecognized nucleotides")
-  }
-
-  if ( l == 0 || !is.numeric(l)) stop("Error: double check your numeric argument!")
-
-  # arguments to uppercase
-  argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
-  list2env(argum, envir =  environment())
-
-  # PAMs for forward and reverse strand ----
-  # substitute N with [ACGT]
-  # reverse complement of PAM
-  PAM_r <- as.character(Biostrings::reverseComplement(Biostrings::DNAString(PAM)))
-  PAMs <- lapply(list(PAM, PAM_r), function(x) gsub("N", "[ACGT]", x))
-  names(PAMs) <- c("forward", "reverse")
-
-  # dynamically create the pattern to match ----
-  pro_pattern <- list(
-    # protospacer pattern forward strand
-    # example: ([ACGT])(?=[ACGT]{19}[ACGT]GG)
-    # looks for START of protospacer: a character that is followed by l -  1 characters and PAM.
-    forward = paste0("([ACGT])(?=[ACGT]{", l - 1, "}", PAMs$forward, ")", collapse = ""),
-
-    # protospacer pattern reverse strand
-    # example: (?<=CC[ACGT][ACGT]{19})([ACGT])
-    # looks for END of protospacer:  that is a character preceded  by l - 1  characters and reverse complement PAM.
-    reverse = paste0("(?<=", PAMs$reverse, "[ACGT]", "{", l - 1, "}", ")", "([ACGT])", collapse = "")
-  )
-
-  # extract the protospacers ----
-  # Note that we could actually create a function to apply to both strands, and thus
-  # eliminate some duplication
-
-  # forward strand
-  # locate the start of the protospacers in forward
-  pro_start_fw <- as.data.frame(stringr::str_locate_all(d_seq, pro_pattern$forward))
-
-  # extract protospacers in forward
-  protospacers_fw <- purrr::map_dfr(pro_start_fw$start, function(x) {
-    start_p <- x
-    end_p <- x + l - 1
-    protospacer <- stringr::str_sub(d_seq, start = start_p, end = end_p)
-    PAM <- stringr::str_sub(d_seq, start = end_p + 1, end = end_p + 3)
-    strand <- "+"
-
-    return(list(
-      start_p = start_p,
-      end_p = end_p,
-      protospacer = protospacer,
-      PAM = PAM,
-      strand = strand
-    ))
-  })
-
-  # reverse strand
-  # locate the END of the protospacers in reverse strand
-
-  # we need the complement of d_seq
-  d_seq_rev <- as.character(Biostrings::complement(Biostrings::DNAString(d_seq)))
-  pro_end_rev <- as.data.frame(stringr::str_locate_all(d_seq_rev, pro_pattern$reverse))
-
-  protospacers_neg <- purrr::map_dfr(pro_end_rev$end, function(x) {
-    start_p <- x - l + 1
-    end_p <- x
-    protospacer <- stringr::str_sub(d_seq_rev, start = start_p, end = end_p)
-    PAM <- stringr::str_sub(d_seq_rev, start = start_p - nchar(PAM) + 1, end = start_p)
-    strand <- "-"
-
-    return(list(
-      start = start_p,
-      end = end_p,
-      protospacer = protospacer,
-      PAM = PAM,
-      strand = strand
-    ))
-  })
-
-  # bind them together
-  rbind(protospacers_fw, protospacers_neg)
-}
-
-#' find_proto2
-#'
-#' Function to identify all candidate guide (protospacer) sequences from a given genomic region.
-#' @details For reverse strand: complement PAM, complement d_seq, match before PAM
-#' @export
-#' @rdname find_proto
-find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
-
   # if the sum of characters that is different than ACGTNacgtn is more than 0, then some wrong nucleotides
   if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0){
     stop("Error: unrecognized nucleotides")
@@ -136,7 +43,7 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
 
   # extract protospacers ---
   # note: needs d_seq
-  proto_frw <- purrr::map_dfr(pro_start$start, function(x) {
+  protospacers <- purrr::map_dfr(pro_start$start, function(x) {
     start_p <- x
     end_p <- x + l - 1
     protospacer <- stringr::str_sub(d_seq , start = start_p, end = end_p)
@@ -150,14 +57,7 @@ find_proto2 <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PA
     ))
   })
 
-  proto_frw[, "strand"] <-  "+"
-
-  proto_rev <- proto_frw
-  proto_rev$strand <-  "-"
-  proto_rev$protospacer <- unlist(lapply(proto_frw$protospacer,
-                                         function(x) as.character(Biostrings::reverseComplement(Biostrings::DNAString(x)))))
-  protospacers <- rbind(proto_frw, proto_rev)
-
+  protospacers[, "strand"] <-  "+"
   protospacers
 
 }
@@ -188,7 +88,7 @@ find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, 
   # check arguments ---
   if (start == end || end - start <= l || !is.numeric(c(start, end))) stop("Error: double check your numeric parameters!")
 
-  message(">>> Importing Data...\n")
+  message(">>> Importing Data: this will take few seconds...\n")
   gen <- Biostrings::readDNAStringSet(file_fasta, format = "fasta")
   message(">>> Data Imported!\n")
 
@@ -200,6 +100,7 @@ find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, 
   gen_chr <- gen[grepl(chr_pattern, gen@ranges@NAMES)]
   gen_chr_sub <- as.character(XVector::subseq(gen_chr, start = start, end = end))
 
-  protospacers <- find_proto2(d_seq = gen_chr_sub, l = l, PAM = PAM)
-  solution
+  protospacers <- find_proto(d_seq = gen_chr_sub, l = l, PAM = PAM)
+
+  protospacers
 }
