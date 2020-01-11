@@ -14,11 +14,18 @@ find_proto(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG")
 \item{PAM}{sequence to match.}
 }
 \value{
-
+a dataframe with columns.
+\enumerate{
+    \item  start.
+    \item  end.
+    \item  protospacer sequence.
+    \item  PAM sequence (e.g. CGG as the sequence that matched the PAM sequence NGG).
+    \item  Strand (+ or -).
+    }
 }
 \description{
 Function to identify all candidate guide (protospacer) sequences from a given genomic region.
 }
 \details{
-xxxxxx
+For reverse strand reverseComplement PAM, comolement d_seq, match after PAM
 }

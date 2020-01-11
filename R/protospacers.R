@@ -41,7 +41,7 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
   # locate the start of the protospacers ---
   pro_start <- as.data.frame(stringr::str_locate_all(d_seq, pro_pattern))
 
-  # extract protospacers ---
+  # extract protospacers ----
   # note: needs d_seq
   protospacers <- purrr::map_dfr(pro_start$start, function(x) {
     start_p <- x
@@ -59,7 +59,6 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
 
   protospacers[, "strand"] <-  "+"
   protospacers
-
 }
 
 #' find_FASTA

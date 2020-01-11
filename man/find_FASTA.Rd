@@ -16,6 +16,8 @@ find_FASTA(
 \arguments{
 \item{file_fasta}{path to a file FASTA (either compressed or not).}
 
+\item{chr}{chromosome.}
+
 \item{start}{start of the DNA sequence to scan for protospacers.}
 
 \item{end}{end of the DNA sequence to scan for protospacers.}

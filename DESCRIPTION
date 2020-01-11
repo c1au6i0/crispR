@@ -18,3 +18,5 @@ Imports:
     purrr,
     XVector
 RoxygenNote: 7.0.2
+Suggests: 
+    testthat
