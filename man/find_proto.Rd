@@ -26,6 +26,3 @@ a dataframe with columns.
 \description{
 Function to identify all candidate guide (protospacer) sequences from a given genomic region.
 }
-\details{
-For reverse strand reverseComplement PAM, comolement d_seq, match after PAM
-}

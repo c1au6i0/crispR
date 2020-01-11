@@ -14,20 +14,19 @@
 #'     \item  PAM sequence (e.g. CGG as the sequence that matched the PAM sequence NGG).
 #'     \item  Strand (+ or -).
 #'     }
-#' @details For reverse strand reverseComplement PAM, comolement d_seq, match after PAM
 #' @export
 find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM = "NGG") {
 
   # if the sum of characters that is different than ACGTNacgtn is more than 0, then some wrong nucleotides
-  if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0){
+  if (sum(unlist(lapply(list(PAM, d_seq), function(x) stringr::str_count(x, "[^ACGTNacgtn]")))) > 0) {
     stop("Error: unrecognized nucleotides")
   }
 
-  if ( l == 0 || !is.numeric(l)) stop("Error: double check your numeric argument!")
+  if (l == 0 || !is.numeric(l)) stop("Error: double check your numeric argument!")
 
   # arguments to uppercase
   argum <- lapply(list(PAM = PAM, d_seq = d_seq), toupper)
-  list2env(argum, envir =  environment())
+  list2env(argum, envir = environment())
 
   # substitute N with [ACGT]
   PAM <- gsub("N", "[ACGT]", PAM)
@@ -46,8 +45,8 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
   protospacers <- purrr::map_dfr(pro_start$start, function(x) {
     start_p <- x
     end_p <- x + l - 1
-    protospacer <- stringr::str_sub(d_seq , start = start_p, end = end_p)
-    PAM <- stringr::str_sub(d_seq , start = end_p + 1, end = end_p + 3)
+    protospacer <- stringr::str_sub(d_seq, start = start_p, end = end_p)
+    PAM <- stringr::str_sub(d_seq, start = end_p + 1, end = end_p + 3)
 
     return(list(
       start_p = start_p,
@@ -57,7 +56,7 @@ find_proto <- function(d_seq = "TGATCTACTAGAGACTACTAACGGGGATACATAG", l = 20, PAM
     ))
   })
 
-  protospacers[, "strand"] <-  "+"
+  protospacers[, "strand"] <- "+"
   protospacers
 }
 
