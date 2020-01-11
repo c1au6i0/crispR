@@ -201,6 +201,5 @@ find_FASTA <- function(file_fasta, chr = 7, start = 117465784, end = 117466784, 
   gen_chr_sub <- as.character(XVector::subseq(gen_chr, start = start, end = end))
 
   protospacers <- find_proto2(d_seq = gen_chr_sub, l = l, PAM = PAM)
-
   solution
 }
