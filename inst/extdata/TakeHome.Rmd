@@ -1,5 +1,5 @@
 ---
-title: "TakeHome exercises Vertex"
+title: "TakeHome exercises v2[2] Vertex"
 author: "Claudio Zanettini"
 date: "Jan 11, 2010"
 output:

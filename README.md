@@ -5,6 +5,9 @@
 
 <!-- badges: end -->
 
+*Takehome exercises (v1\[2\]) for Bioinformatics Software Engineer
+position at Vertex Pharmaceuticals.*
+
 I wrote the functions directly in a `R package`. This facilitates the
 installation of all the dependencies…
 
@@ -20,7 +23,7 @@ devtools::install_github("c1au6i0/crispR")
 ### a) the code for the function
 
 You can access the code of the function `find_proto`
-([here](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R)).
+[here](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R).
 
 ### b) the code to call the function with the example variables (and others, if desired)
 
@@ -82,7 +85,7 @@ time Complexity: *O(n)*
 ### a) The code for the function
 
 You can access the code of the function `find_FASTA`
-([here](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R)).
+[here](https://github.com/c1au6i0/crispR/blob/master/R/protospacers.R).
 
 ### b) The source of the FASTA file used for the reference genome in the example problem
 
@@ -113,3 +116,8 @@ A quick and dirty version can be written probably in 1 hour or less. I
 polished the code, wrote the documentation too, and in total it took me
 few hours… but I also spent quite some time thinking about the reverse
 complementary strand\!
+
+### zip file as requested in the email
+
+The zip file can be download
+[here](https://1drv.ms/u/s!Am3aUTxhPMS8iZpDcSXwTg4UQTo8kA?e=QLlnhe).
