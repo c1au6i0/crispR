@@ -1,12 +1,9 @@
 
-# crispR
+# crispR: Takehome exercises (v1\[2\]) 
 
 <!-- badges: start -->
 
 <!-- badges: end -->
-
-*Takehome exercises (v1\[2\]) for Bioinformatics Software Engineer
-position at Vertex Pharmaceuticals.*
 
 I wrote the functions directly in a `R package`. This facilitates the
 installation of all the dependencies…
