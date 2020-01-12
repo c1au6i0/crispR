@@ -116,8 +116,3 @@ A quick and dirty version can be written probably in 1 hour or less. I
 polished the code, wrote the documentation too, and in total it took me
 few hours… but I also spent quite some time thinking about the reverse
 complementary strand\!
-
-### zip file as requested in the email
-
-The zip file can be download
-[here](https://1drv.ms/u/s!Am3aUTxhPMS8iZpDcSXwTg4UQTo8kA?e=QLlnhe).
