@@ -106,3 +106,10 @@ A tab-delimited file can be downloaded
 All the dependencies are listed in the `Description` file in my github
 account
 [here](https://github.com/c1au6i0/crispR/blob/master/DESCRIPTION).
+
+### Time needed to right the code
+
+A quick and dirty version can be written probably in 1 hour or less. I
+polished the code, wrote the documentation too, and in total it took me
+few hours… but I also spent quite some time thinking about the reverse
+complementary strand\!
