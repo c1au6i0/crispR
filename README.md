@@ -1,12 +1,13 @@
 
-# crispR: Takehome exercises (v1\[2\]) 
+# crispR
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-I wrote the functions directly in a `R package`. This facilitates the
-installation of all the dependencies…
+These are functions written for a takehome exercises for a Bioinformatics Software Engineer position. The functions identify candidate guide (protospacer) sequences from a given genomic region (string) / or a FASTA file. Never heard back from the company.
+
+Below my answers.
 
 ## Installation
 
@@ -106,14 +107,3 @@ A tab-delimited file can be downloaded
 All the dependencies are listed in the `Description` file in my github
 account
 [here](https://github.com/c1au6i0/crispR/blob/master/DESCRIPTION).
-
-### Time needed to right the code
-
-A quick and dirty version can be written probably in 1 hour or less. I
-polished the code, wrote the documentation too, and in total it took me
-few hours… but I also spent quite some time thinking about the reverse
-complementary strand\!
-
-### zip file with answers
-
-A zip file with all the answers as requested by Kristen Salemi, can be downloaded [here](https://1drv.ms/u/s!Am3aUTxhPMS8iZpDcSXwTg4UQTo8kA?e=T4bdcV)
